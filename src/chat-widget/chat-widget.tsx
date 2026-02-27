@@ -15,8 +15,14 @@ type Message = {
   text: string
 }
 
-function appendMessage(messages: Message[], nextText: string): Message[] {
-  const normalized = nextText.trim()
+const DEFAULT_BOT_REPLY = '문의 주셔서 감사합니다. 확인 후 답변드릴게요.'
+
+function appendMessage(
+  messages: Message[],
+  role: Message['role'],
+  text: string
+): Message[] {
+  const normalized = text.trim()
 
   if (normalized.length === 0) {
     return messages
@@ -26,7 +32,7 @@ function appendMessage(messages: Message[], nextText: string): Message[] {
     ...messages,
     {
       id: messages.length + 1,
-      role: 'user',
+      role,
       text: normalized,
     },
   ]
@@ -37,10 +43,22 @@ export function ChatWidget({ title = 'Support Chat' }: ChatWidgetProps) {
   const [inputValue, setInputValue] = useState('')
 
   const handleSendMessage = () => {
-    const nextMessages = appendMessage(messages, inputValue)
+    const normalizedInput = inputValue.trim()
 
-    setMessages(nextMessages)
+    if (normalizedInput.length === 0) {
+      return
+    }
+
+    setMessages((prevMessages) =>
+      appendMessage(prevMessages, 'user', normalizedInput)
+    )
     setInputValue('')
+
+    setTimeout(() => {
+      setMessages((prevMessages) =>
+        appendMessage(prevMessages, 'bot', DEFAULT_BOT_REPLY)
+      )
+    }, 500)
   }
 
   return (
@@ -65,7 +83,7 @@ export function ChatWidget({ title = 'Support Chat' }: ChatWidgetProps) {
             className={`max-w-[82%] rounded-2xl p-3 ${
               message.role === 'user'
                 ? 'self-end bg-black text-white'
-                : 'self-start bg-white'
+                : 'self-start bg-white text-slate-900'
             }`}
           >
             {message.text}
