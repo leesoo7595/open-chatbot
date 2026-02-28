@@ -4,9 +4,13 @@ import { useState } from 'react'
 import { Card } from './ui/card'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
+import { requestBotReply } from './_apis/request-bot-reply'
 
-type ChatWidgetProps = {
+export type ChatWidgetProps = {
   title?: string
+  apiEndpoint?: string
+  botId?: string
+  scopeId?: string
 }
 
 type Message = {
@@ -15,7 +19,10 @@ type Message = {
   text: string
 }
 
-const DEFAULT_BOT_REPLY = '문의 주셔서 감사합니다. 확인 후 답변드릴게요.'
+const API_ERROR_REPLY = '지금은 답변을 불러오지 못했어요. 잠시 후 다시 시도해주세요.'
+const DEFAULT_API_ENDPOINT = '/api/chat/query'
+const DEFAULT_BOT_ID = 'demo-bot'
+const DEFAULT_SCOPE_ID = 'default'
 
 function appendMessage(
   messages: Message[],
@@ -38,11 +45,16 @@ function appendMessage(
   ]
 }
 
-export function ChatWidget({ title = 'Support Chat' }: ChatWidgetProps) {
+export function ChatWidget({
+  title = 'Support Chat',
+  apiEndpoint = DEFAULT_API_ENDPOINT,
+  botId = DEFAULT_BOT_ID,
+  scopeId = DEFAULT_SCOPE_ID,
+}: ChatWidgetProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     const normalizedInput = inputValue.trim()
 
     if (normalizedInput.length === 0) {
@@ -54,11 +66,19 @@ export function ChatWidget({ title = 'Support Chat' }: ChatWidgetProps) {
     )
     setInputValue('')
 
-    setTimeout(() => {
+    try {
+      const answer = await requestBotReply({
+        apiEndpoint,
+        botId,
+        scopeId,
+        message: normalizedInput,
+      })
+      setMessages((prevMessages) => appendMessage(prevMessages, 'bot', answer))
+    } catch {
       setMessages((prevMessages) =>
-        appendMessage(prevMessages, 'bot', DEFAULT_BOT_REPLY)
+        appendMessage(prevMessages, 'bot', API_ERROR_REPLY)
       )
-    }, 500)
+    }
   }
 
   return (
@@ -94,7 +114,7 @@ export function ChatWidget({ title = 'Support Chat' }: ChatWidgetProps) {
       <form
         onSubmit={(event) => {
           event.preventDefault()
-          handleSendMessage()
+          void handleSendMessage()
         }}
         className="flex h-[56px] items-center gap-2 border-t border-slate-200 bg-white px-3 py-2"
       >
