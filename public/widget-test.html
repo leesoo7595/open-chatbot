@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Widget Embed Test</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        background: #f4f4f5;
+        color: #111827;
+      }
+      main {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 48px 24px;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 28px;
+      }
+      p {
+        margin: 0 0 10px;
+        line-height: 1.5;
+      }
+      code {
+        background: #e5e7eb;
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Widget Embed Test Page</h1>
+      <p>This page loads <code>/widget.js</code> automatically.</p>
+      <p>
+        If successful, a chat iframe should appear at the bottom-right corner.
+      </p>
+    </main>
+
+    <script
+      src="/widget.js"
+      data-host="http://localhost:3000"
+      data-bot-id="demo-bot"
+      data-width="360"
+      data-height="560"
+    ></script>
+  </body>
+</html>
