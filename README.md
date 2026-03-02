@@ -6,7 +6,7 @@
 - SDK 코드: `src/chat-widget/*`
 - 호스트 API 예제: `app/api/chat/query/route.ts`
 - iframe 호스트 페이지: `app/embed/[botId]/page.tsx`
-- script 임베드 부트스트랩: `public/widget.js`
+- script 임베드 소스: `src/chat-widget/_scripts/*`
 
 ## Quick Start
 
@@ -60,17 +60,15 @@ export default function App() {
 ## Script 1줄 임베드
 
 ```html
-<script src="https://YOUR_HOST/widget.js" data-host="https://YOUR_HOST" data-bot-id="demo-bot"></script>
+<script src="https://cdn.yourservice.com/widget/v1/widget.js" data-host="https://chat.yourservice.com" data-bot-id="demo-bot"></script>
 ```
 
-주의:
-- 위 `src`는 플레이스홀더입니다.
-- SDK 공식 배포 시 고정 `script src`(Managed CDN URL)를 확정해야 합니다.
-
-TODO:
-- Managed CDN 배포 경로 확정 (예: `https://cdn.yourservice.com/widget/v1/widget.js`)
-- 버전 정책 확정 (`/v1/` 고정 경로 + 캐시 전략)
-- README의 플레이스홀더 `src`를 공식 URL로 교체
+서빙 전략:
+- 기본(권장): Managed CDN 고정 경로
+  - `https://cdn.yourservice.com/widget/v1/widget.js`
+- 로컬/호스트 빠른 확인: `public/widget.js` 경로 사용
+  - 예: `http://localhost:3000/widget.js`
+- 대안(Self-host): `npm run build:sdk` 후 `dist/widget.js`를 정적 호스팅 경로에 업로드
 
 지원 `data-*` 옵션:
 - `data-host` iframe 소스 호스트
@@ -123,6 +121,12 @@ SDK 타입/출력 빌드:
 ```bash
 npm run build:widget
 ```
+
+생성 파일:
+- `dist/index.mjs`
+- `dist/index.js`
+- `dist/index.d.ts`
+- `dist/widget.js`
 
 애플리케이션 빌드:
 

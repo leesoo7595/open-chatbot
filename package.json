@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "build:widget": "tsc -p tsconfig.widget.json"
+    "build:sdk": "tsup"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
+    "tsup": "^8.5.0",
     "typescript": "^5"
   }
 }
