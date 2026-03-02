@@ -9,5 +9,9 @@ type EmbedPageProps = {
 export default async function EmbedPage({ params }: EmbedPageProps) {
   const { botId } = await params
 
-  return <ChatWidget botId={botId} />
+  return (
+    <main className="h-screen w-screen bg-slate-50">
+      <ChatWidget botId={botId} />
+    </main>
+  )
 }
