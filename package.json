@@ -7,14 +7,22 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "build:sdk": "tsup"
+    "build:sdk": "tsup",
+    "sync:widget-local": "cp dist/widget.js public/widget.js",
+    "prepare:widget-local": "npm run build:sdk && npm run sync:widget-local"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
     }
   },
   "files": [
