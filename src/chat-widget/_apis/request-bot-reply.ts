@@ -1,4 +1,4 @@
-type RequestBotReplyParams = {
+export type RequestBotReplyParams = {
   apiEndpoint: string
   botId: string
   scopeId: string

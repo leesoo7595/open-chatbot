@@ -4,13 +4,17 @@ import { useState } from 'react'
 import { Card } from './ui/card'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { requestBotReply } from './_apis/request-bot-reply'
+import {
+  requestBotReply,
+  type RequestBotReplyParams,
+} from './_apis/request-bot-reply'
 
 export type ChatWidgetProps = {
   title?: string
   apiEndpoint?: string
   botId?: string
   scopeId?: string
+  onSend?: (params: RequestBotReplyParams) => Promise<string>
 }
 
 type Message = {
@@ -50,6 +54,7 @@ export function ChatWidget({
   apiEndpoint = DEFAULT_API_ENDPOINT,
   botId = DEFAULT_BOT_ID,
   scopeId = DEFAULT_SCOPE_ID,
+  onSend,
 }: ChatWidgetProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
@@ -67,7 +72,8 @@ export function ChatWidget({
     setInputValue('')
 
     try {
-      const answer = await requestBotReply({
+      const sendReply = onSend ?? requestBotReply
+      const answer = await sendReply({
         apiEndpoint,
         botId,
         scopeId,
